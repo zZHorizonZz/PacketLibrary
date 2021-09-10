@@ -17,7 +17,7 @@ namespace PacketLibrary.Network
         public ProtocolRegistry Protocols { get; }
         public List<IConnection> Connections { get; }
 
-        public Server(int port) : this(null, port)
+        public Server(int port) : this("127.0.0.1", port)
         {
 
         }

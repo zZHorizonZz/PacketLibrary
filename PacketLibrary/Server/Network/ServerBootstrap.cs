@@ -24,7 +24,7 @@ namespace PacketLibrary.Network
             Task<TcpClient> client = Listener.AcceptTcpClientAsync();
             client.ContinueWith(tcpClient =>
             {
-                connection = new DefaultConnection(this.defaultProtocol, tcpClient.Result);
+                connection = new DefaultConnection(defaultProtocol, tcpClient.Result);
             });
 
             if (connection != null)

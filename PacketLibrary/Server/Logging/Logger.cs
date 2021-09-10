@@ -5,6 +5,9 @@ namespace PacketLibrary.Logging
 {
     public class Logger
     {
+
+        public static Logger LOGGER = new Logger();
+
         private LinkedList<Record> RecordLog { get; }
 
         public Logger()
