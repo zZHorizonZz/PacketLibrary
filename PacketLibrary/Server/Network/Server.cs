@@ -13,7 +13,7 @@ namespace PacketLibrary.Network
         public string Address { get; set; }
         public int Port { get; set; }
 
-        public TcpListener Listener { get; }
+        public TcpListener Listener { get; set; }
         public ProtocolRegistry Protocols { get; }
         public List<IConnection> Connections { get; }
 
@@ -34,21 +34,20 @@ namespace PacketLibrary.Network
         {
 
             Logger.Info("Server is starting..", null);
-            TcpListener listener;
 
             IPAddress address = IPAddress.Parse(Address);
-            listener = new TcpListener(address, Port);
+            Listener = new TcpListener(address, Port);
 
             try
             {
-                listener.Start();
+                Listener.Start();
             }
             catch (SocketException exception)
             {
                 Logger.Error("Error occured when starting new tcp listerner.", exception, null);
             }
 
-            return listener;
+            return Listener;
         }
 
         public abstract IConnection HandleIncomingConnection();
