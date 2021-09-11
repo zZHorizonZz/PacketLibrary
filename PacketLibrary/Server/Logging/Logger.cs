@@ -55,7 +55,10 @@ namespace PacketLibrary.Logging
 
         public Record Log(Record.Level level, string message, Exception exception, object[] arguments)
         {
-            message = string.Format(message, arguments);
+            if (arguments != null)
+            {
+                message = string.Format(message, arguments);
+            }
 
             Record record = new Record(level, message, DateTime.Now, exception);
             RecordLog.AddLast(record);
