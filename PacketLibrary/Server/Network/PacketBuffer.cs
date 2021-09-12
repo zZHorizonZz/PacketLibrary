@@ -10,7 +10,6 @@ namespace PacketLibrary.Network
         public int ReaderIndex { get; set; }
         public int WriterIndex { get; set; }
 
-
         public PacketBuffer(int capacity)
         {
             Buffer = new byte[capacity];

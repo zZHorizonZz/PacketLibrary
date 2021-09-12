@@ -2,7 +2,7 @@
 {
     public interface ICodec<T> where T : Packet
     {
-        T Decode();
+        T Decode(PacketBuffer buffer);
 
         PacketBuffer Encode(T packet, PacketBuffer buffer);
     }

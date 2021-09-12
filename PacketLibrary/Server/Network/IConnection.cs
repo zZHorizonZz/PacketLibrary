@@ -6,8 +6,6 @@ namespace PacketLibrary.Network
     {
         TcpClient GetClient();
 
-        PacketBuffer GetBuffer();
-
         Protocol GetCurrentProtocol();
 
         void SetProtocol(Protocol protocol);

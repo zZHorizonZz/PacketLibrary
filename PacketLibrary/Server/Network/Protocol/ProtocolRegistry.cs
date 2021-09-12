@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 
 namespace PacketLibrary.Network
 {
@@ -6,33 +7,33 @@ namespace PacketLibrary.Network
     {
 
         public Protocol ParentProtocol { get; }
-        public CodecContainer Outbound { get; }
-        public CodecContainer Inbound { get; }
+        public CodecContainer<Packet> Outbound { get; }
+        public CodecContainer<Packet> Inbound { get; }
         public HandlerService Handlers { get; }
 
         public ProtocolRegistry(Protocol parentProtocol)
         {
             ParentProtocol = parentProtocol;
 
-            Outbound = new CodecContainer();
-            Inbound = new CodecContainer();
+            Outbound = new CodecContainer<Packet>();
+            Inbound = new CodecContainer<Packet>();
             Handlers = new HandlerService();
         }
 
-        public void RegisterInbound(int operationalCode, ICodec<Packet> codec)
+        public void RegisterInbound<T>(int operationalCode, ICodec<T> codec) where T : Packet
         {
-            Inbound.Bind(operationalCode, codec);
+            Inbound.Bind(operationalCode, (ICodec<Packet>)codec);
         }
 
-        public void RegisterInboundWithHandler(int operationalCode, ICodec<Packet> codec, Type packetClass, IPacketHandler<Packet> handler)
+        public void RegisterInboundWithHandler<T>(int operationalCode, ICodec<T> codec, Type packetClass, IPacketHandler<T> handler) where T : Packet
         {
-            Inbound.Bind(operationalCode, codec);
-            Handlers.Bind(packetClass, handler);
+            Inbound.Bind(operationalCode, (ICodec<Packet>)codec);
+            Handlers.Bind(packetClass, (IPacketHandler<Packet>)handler);
         }
 
-        public void RegisterOutbound(int operationalCode, ICodec<Packet> codec)
+        public void RegisterOutbound<T>(int operationalCode, ICodec<T> codec) where T : Packet
         {
-            Outbound.Bind(operationalCode, codec);
+            Outbound.Bind(operationalCode, (ICodec<Packet>)codec);
         }
 
         public IPacketHandler<Packet> GetPacketHandler(Type type)
@@ -40,16 +41,33 @@ namespace PacketLibrary.Network
             return Handlers.Find(type);
         }
 
-        public ICodec<Packet> ReadHeader(PacketBuffer buffer)
+        public Packet ReadPacket(NetworkStream stream)
         {
-            int operationalCode = buffer.ReadInteger();
-            int length = buffer.ReadInteger();
+            Tuple<int, PacketBuffer> header = ReadHeader(stream);
 
-            return null;
+            int operationalCode = header.Item1;
+            PacketBuffer buffer = header.Item2;
+
+            ICodec<Packet> codec = Inbound.Get(operationalCode);
+
+            return codec.Decode(buffer);
         }
 
-        public void WritePacket(Packet packet, PacketBuffer buffer)
+        public Tuple<int, PacketBuffer> ReadHeader(NetworkStream stream)
         {
+            byte[] header = new byte[8];
+            stream.Read(header, 0, header.Length);
+
+            int operationalCode = BitConverter.ToInt32(header, 0);
+            int length = BitConverter.ToInt32(header, 4);
+
+            return new Tuple<int, PacketBuffer>(operationalCode, new PacketBuffer(length));
+        }
+
+        public void WritePacket(Packet packet, NetworkStream stream)
+        {
+            PacketBuffer buffer = new PacketBuffer(1024);
+
             int operationalCode = Outbound.GetOperationalCode(packet);
             ICodec<Packet> codec = Outbound.Get(operationalCode);
 
@@ -57,6 +75,8 @@ namespace PacketLibrary.Network
 
             WriteHeader(operationalCode, data.Lenght(), buffer);
             buffer.WriteBuffer(data);
+
+            stream.Write(buffer.Buffer, 0, buffer.Lenght());
         }
 
         public void WriteHeader(int operationalCode, int length, PacketBuffer buffer)

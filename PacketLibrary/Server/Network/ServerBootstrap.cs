@@ -4,7 +4,7 @@ namespace PacketLibrary.Network
 {
     public class ServerBootstrap : Server
     {
-        private SimpleProtocol defaultProtocol;
+        public SimpleProtocol DefaultProtocol { get; }
 
         public ServerBootstrap(int port) : base(port)
         {
@@ -13,14 +13,14 @@ namespace PacketLibrary.Network
 
         public ServerBootstrap(string address, int port) : base(address, port)
         {
-            defaultProtocol = new SimpleProtocol();
+            DefaultProtocol = new SimpleProtocol();
         }
 
         public override IConnection HandleIncomingConnection()
         {
             TcpClient tcpClient = Listener.AcceptTcpClient();
 
-            IConnection connection = new DefaultConnection(defaultProtocol, tcpClient);
+            IConnection connection = new DefaultConnection(DefaultProtocol, tcpClient);
             if (connection != null)
             {
                 Logger.Debug("Connection between server and client has been established!");

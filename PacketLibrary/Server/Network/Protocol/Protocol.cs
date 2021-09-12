@@ -9,6 +9,7 @@
         public Protocol(int protocolIdentifier)
         {
             ProtocolIdentifier = protocolIdentifier;
+            ProtocolRegistry = new ProtocolRegistry(this);
         }
     }
 }

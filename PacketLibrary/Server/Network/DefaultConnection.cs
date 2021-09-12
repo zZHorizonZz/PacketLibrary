@@ -1,24 +1,37 @@
-﻿using System.Net.Sockets;
+﻿using PacketLibrary.Logging;
+using System;
+using System.Net.Sockets;
 
 namespace PacketLibrary.Network
 {
     public class DefaultConnection : IConnection
     {
+        public Logger logger = Logger.LOGGER;
 
         private Protocol CurrentProtocol;
-        private PacketBuffer Buffer;
         private TcpClient Client;
 
         public DefaultConnection(Protocol protocol, TcpClient client)
         {
             CurrentProtocol = protocol;
             Client = client;
-            Buffer = new PacketBuffer(4096);
         }
 
-        public PacketBuffer GetBuffer()
+        public void Read()
         {
-            return Buffer;
+            NetworkStream stream = Client.GetStream();
+
+            try
+            {
+                while (stream.DataAvailable)
+                {
+                    Packet packet = CurrentProtocol.ProtocolRegistry.ReadPacket(stream);
+                }
+            }
+            catch (ArgumentOutOfRangeException exception)
+            {
+                logger.Error("Something went wrong when reading data from stream of client.", exception);
+            }
         }
 
         public TcpClient GetClient()
@@ -31,7 +44,7 @@ namespace PacketLibrary.Network
             return CurrentProtocol;
         }
 
-        public void SendPacket(Packet packet) => GetCurrentProtocol().ProtocolRegistry.WritePacket(packet, GetBuffer());
+        public void SendPacket(Packet packet) => GetCurrentProtocol().ProtocolRegistry.WritePacket(packet, Client.GetStream());
 
         public void SetProtocol(Protocol protocol)
         {

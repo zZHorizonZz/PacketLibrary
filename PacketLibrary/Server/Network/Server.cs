@@ -14,7 +14,6 @@ namespace PacketLibrary.Network
         public int Port { get; set; }
 
         public TcpListener Listener { get; set; }
-        public ProtocolRegistry Protocols { get; }
         public List<IConnection> Connections { get; }
 
         public Server(int port) : this("127.0.0.1", port)
