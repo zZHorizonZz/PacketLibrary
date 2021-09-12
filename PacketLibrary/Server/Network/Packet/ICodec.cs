@@ -1,9 +1,9 @@
 ﻿namespace PacketLibrary.Network
 {
-    public interface ICodec<T> where T : Packet
+    public interface ICodec
     {
-        T Decode(PacketBuffer buffer);
+        Packet Decode(PacketBuffer buffer);
 
-        PacketBuffer Encode(T packet, PacketBuffer buffer);
+        PacketBuffer Encode(Packet packet, PacketBuffer buffer);
     }
 }

@@ -3,37 +3,48 @@ using System.Net.Sockets;
 
 namespace PacketLibrary.Network
 {
+    /**
+     * Protocol registry is something like storage for outbound and inbound
+     * codecs that are used for <see cref="Packet"/> decoding and encoding
+     * of packets. Also there is <see cref="HandlerService"/> that is used
+     * for registration of <see cref="IPacketHandler{T}"/> that can handle
+     * method that should be executed after incoming <see cref="Packet"/>
+     * is successfully decoded.
+     */
     public class ProtocolRegistry
     {
 
         public Protocol ParentProtocol { get; }
-        public CodecContainer<Packet> Outbound { get; }
-        public CodecContainer<Packet> Inbound { get; }
+        public CodecContainer Outbound { get; }
+        public CodecContainer Inbound { get; }
         public HandlerService Handlers { get; }
 
         public ProtocolRegistry(Protocol parentProtocol)
         {
             ParentProtocol = parentProtocol;
 
-            Outbound = new CodecContainer<Packet>();
-            Inbound = new CodecContainer<Packet>();
+            Outbound = new CodecContainer();
+            Inbound = new CodecContainer();
             Handlers = new HandlerService();
         }
 
-        public void RegisterInbound<T>(int operationalCode, ICodec<T> codec) where T : Packet
+        /**
+         * 
+         */
+        public void RegisterInbound(int operationalCode, ICodec codec)
         {
-            Inbound.Bind(operationalCode, (ICodec<Packet>)codec);
+            Inbound.Bind(operationalCode, codec);
         }
 
-        public void RegisterInboundWithHandler<T>(int operationalCode, ICodec<T> codec, Type packetClass, IPacketHandler<T> handler) where T : Packet
+        public void RegisterInboundWithHandler(int operationalCode, ICodec codec, Type packetClass, IPacketHandler<Packet> handler)
         {
-            Inbound.Bind(operationalCode, (ICodec<Packet>)codec);
-            Handlers.Bind(packetClass, (IPacketHandler<Packet>)handler);
+            Inbound.Bind(operationalCode, codec);
+            Handlers.Bind(packetClass, handler);
         }
 
-        public void RegisterOutbound<T>(int operationalCode, ICodec<T> codec) where T : Packet
+        public void RegisterOutbound(int operationalCode, ICodec codec)
         {
-            Outbound.Bind(operationalCode, (ICodec<Packet>)codec);
+            Outbound.Bind(operationalCode, codec);
         }
 
         public IPacketHandler<Packet> GetPacketHandler(Type type)
@@ -48,7 +59,7 @@ namespace PacketLibrary.Network
             int operationalCode = header.Item1;
             PacketBuffer buffer = header.Item2;
 
-            ICodec<Packet> codec = Inbound.Get(operationalCode);
+            ICodec codec = Inbound.Get(operationalCode);
 
             return codec.Decode(buffer);
         }
@@ -69,7 +80,7 @@ namespace PacketLibrary.Network
             PacketBuffer buffer = new PacketBuffer(1024);
 
             int operationalCode = Outbound.GetOperationalCode(packet);
-            ICodec<Packet> codec = Outbound.Get(operationalCode);
+            ICodec codec = Outbound.Get(operationalCode);
 
             PacketBuffer data = codec.Encode(packet, new PacketBuffer(1024));
 

@@ -2,19 +2,20 @@
 
 namespace PacketLibrary.Network
 {
-    public class CodecContainer<T> where T : Packet
+    public class CodecContainer
     {
 
-        private SortedDictionary<int, ICodec<T>> Codec { get; }
-        private SortedDictionary<T, int> OperationalCodes { get; }
+        private IDictionary<int, ICodec> Codec { get; }
+        private IDictionary<Packet, int> OperationalCodes { get; }
 
 
         public CodecContainer()
         {
-            Codec = new SortedDictionary<int, ICodec<T>>();
+            Codec = new SortedDictionary<int, ICodec>();
+            OperationalCodes = new SortedDictionary<Packet, int>();
         }
 
-        public void Bind(int operationCode, ICodec<T> codec)
+        public void Bind(int operationCode, ICodec codec)
         {
             if (HasCodec(operationCode))
             {
@@ -24,9 +25,9 @@ namespace PacketLibrary.Network
             Codec.Add(operationCode, codec);
         }
 
-        public ICodec<T> Get(int operationCode) => Codec[operationCode];
+        public ICodec Get(int operationCode) => Codec[operationCode];
 
-        public int GetOperationalCode(T packet) => OperationalCodes[packet];
+        public int GetOperationalCode(Packet packet) => OperationalCodes[packet];
 
         public bool HasCodec(int operationCode) => Codec.ContainsKey(operationCode);
     }
