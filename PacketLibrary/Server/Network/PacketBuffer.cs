@@ -60,10 +60,8 @@ namespace PacketLibrary.Network
                 throw new IndexOutOfRangeException("When writing bytes something went wrong. Writer Index: " + WriterIndex + " , Bytes:" + bytes.Length + " , Buffer length: " + Buffer.Length);
             }
 
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                Buffer[WriterIndex++ + i] = bytes[i];
-            }
+            bytes.CopyTo(Buffer, WriterIndex);
+            WriterIndex += bytes.Length;
         }
 
         public void WriteBytes(int index, byte[] bytes)

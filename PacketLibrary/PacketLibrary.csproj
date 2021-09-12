@@ -6,7 +6,7 @@
     <TargetFrameworks>netstandard2.0;</TargetFrameworks>
     <Description>Simple library for easy sending of packets to client or to server.</Description>
     <PackageTags>Packets, Packet library</PackageTags>
-    <Version>1.1.3</Version>
+    <Version>1.1.5</Version>
   </PropertyGroup>
 
 </Project>
