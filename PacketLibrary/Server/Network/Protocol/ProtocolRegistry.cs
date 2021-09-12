@@ -13,7 +13,6 @@ namespace PacketLibrary.Network
      */
     public class ProtocolRegistry
     {
-
         public Protocol ParentProtocol { get; }
         public CodecContainer Outbound { get; }
         public CodecContainer Inbound { get; }
@@ -76,7 +75,6 @@ namespace PacketLibrary.Network
             int operationalCode = BitConverter.ToInt32(header, 0);
             int length = BitConverter.ToInt32(header, 4);
 
-            Console.WriteLine("OP Code: {0} , Length: {1}", operationalCode, length);
             return new Tuple<int, int>(operationalCode, length);
         }
 

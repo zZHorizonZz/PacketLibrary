@@ -22,5 +22,10 @@ namespace PacketLibrary.Network
         {
             return Handlers[packet];
         }
+
+        public bool HasHandler(Type packet)
+        {
+            return Handlers.ContainsKey(packet);
+        }
     }
 }

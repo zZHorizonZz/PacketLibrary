@@ -6,7 +6,7 @@ namespace PacketLibrary.Network
 {
     public class DefaultConnection : IConnection
     {
-        public Logger logger = Logger.LOGGER;
+        public Logger Logger = Logger.LOGGER;
 
         private Protocol CurrentProtocol;
         private readonly TcpClient Client;
@@ -27,7 +27,7 @@ namespace PacketLibrary.Network
                 {
                     Packet packet = CurrentProtocol.ProtocolRegistry.ReadPacket(stream);
 
-                    if (packet != null)
+                    if (packet != null && CurrentProtocol.ProtocolRegistry.Handlers.HasHandler(packet.GetType()))
                     {
                         IPacketHandler packetHandler = CurrentProtocol.ProtocolRegistry.GetPacketHandler(packet.GetType());
 
@@ -40,11 +40,11 @@ namespace PacketLibrary.Network
             }
             catch (ArgumentOutOfRangeException exception)
             {
-                logger.Error("Something went wrong when reading data from stream of client.", exception);
+                Logger.Error("Something went wrong when reading data from stream of client.", exception);
             }
             catch (Exception exception)
             {
-                logger.Error("Error occured when reading packet.", exception);
+                Logger.Error("Error occured when reading packet.", exception);
             }
         }
 
