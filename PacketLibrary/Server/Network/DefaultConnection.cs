@@ -33,7 +33,7 @@ namespace PacketLibrary.Network
 
                         if (packetHandler != null)
                         {
-                            packetHandler.Handle(packet);
+                            packetHandler.Handle(this, packet);
                         }
                     }
                 }

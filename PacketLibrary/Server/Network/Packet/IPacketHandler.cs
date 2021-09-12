@@ -3,6 +3,6 @@
     public interface IPacketHandler
     {
 
-        void Handle(Packet packet);
+        void Handle(IConnection connection, Packet packet);
     }
 }
