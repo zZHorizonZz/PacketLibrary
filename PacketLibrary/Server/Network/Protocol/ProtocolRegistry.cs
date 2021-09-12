@@ -36,7 +36,7 @@ namespace PacketLibrary.Network
             Inbound.Bind(operationalCode, codec, packet);
         }
 
-        public void RegisterInboundWithHandler(int operationalCode, ICodec codec, Type packet, IPacketHandler<Packet> handler)
+        public void RegisterInboundWithHandler(int operationalCode, ICodec codec, Type packet, IPacketHandler handler)
         {
             Inbound.Bind(operationalCode, codec, packet);
             Handlers.Bind(packet, handler);
@@ -47,7 +47,7 @@ namespace PacketLibrary.Network
             Outbound.Bind(operationalCode, codec, packet);
         }
 
-        public IPacketHandler<Packet> GetPacketHandler(Type type)
+        public IPacketHandler GetPacketHandler(Type type)
         {
             return Handlers.Find(type);
         }

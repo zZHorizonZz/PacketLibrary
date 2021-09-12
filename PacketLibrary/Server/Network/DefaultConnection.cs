@@ -26,6 +26,16 @@ namespace PacketLibrary.Network
                 while (stream.DataAvailable)
                 {
                     Packet packet = CurrentProtocol.ProtocolRegistry.ReadPacket(stream);
+
+                    if (packet != null)
+                    {
+                        IPacketHandler packetHandler = CurrentProtocol.ProtocolRegistry.GetPacketHandler(packet.GetType());
+
+                        if (packetHandler != null)
+                        {
+                            packetHandler.Handle(packet);
+                        }
+                    }
                 }
             }
             catch (ArgumentOutOfRangeException exception)

@@ -6,19 +6,19 @@ namespace PacketLibrary.Network
     public class HandlerService
     {
 
-        private Dictionary<Type, IPacketHandler<Packet>> Handlers { get; }
+        private Dictionary<Type, IPacketHandler> Handlers { get; }
 
         public HandlerService()
         {
-            Handlers = new Dictionary<Type, IPacketHandler<Packet>>();
+            Handlers = new Dictionary<Type, IPacketHandler>();
         }
 
-        public void Bind(Type packet, IPacketHandler<Packet> handler)
+        public void Bind(Type packet, IPacketHandler handler)
         {
             Handlers.Add(packet, handler);
         }
 
-        public IPacketHandler<Packet> Find(Type packet)
+        public IPacketHandler Find(Type packet)
         {
             return Handlers[packet];
         }

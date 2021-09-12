@@ -1,8 +1,8 @@
 ﻿namespace PacketLibrary.Network
 {
-    public interface IPacketHandler<T> where T : Packet
+    public interface IPacketHandler
     {
 
-        void Handle(T packet);
+        void Handle(Packet packet);
     }
 }

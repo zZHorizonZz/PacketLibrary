@@ -171,6 +171,48 @@ namespace PacketLibrary.Network
             WriteBytes(BitConverter.GetBytes(value));
         }
 
+        public long ReadLong(int index)
+        {
+            if (index >= Buffer.Length)
+            {
+                throw new InternalBufferOverflowException("When reading long something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
+            }
+
+            return BitConverter.ToInt64(Buffer, index);
+        }
+
+        public long ReadLong()
+        {
+            if (ReaderIndex >= Buffer.Length)
+            {
+                throw new InternalBufferOverflowException("When reading long something went wrong. Reader Index: " + ReaderIndex + " , Buffer length: " + Buffer.Length);
+            }
+
+            long value = BitConverter.ToInt64(Buffer, ReaderIndex);
+            ReaderIndex += 8;
+
+            return value;
+        }
+
+        public void WriteLong(int index, long value)
+        {
+            if (index >= Buffer.Length)
+            {
+                throw new IndexOutOfRangeException("When writing long something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
+            }
+
+            WriteBytes(index, BitConverter.GetBytes(value));
+        }
+        public void WriteLong(long value)
+        {
+            if (WriterIndex >= Buffer.Length)
+            {
+                throw new IndexOutOfRangeException("When writing long something went wrong. Writer Index: " + WriterIndex + " , Buffer length: " + Buffer.Length);
+            }
+
+            WriteBytes(BitConverter.GetBytes(value));
+        }
+
         public int Lenght() => Buffer.Length;
     }
 }
