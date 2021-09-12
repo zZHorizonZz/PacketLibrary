@@ -31,20 +31,20 @@ namespace PacketLibrary.Network
         /**
          * 
          */
-        public void RegisterInbound(int operationalCode, ICodec codec)
+        public void RegisterInbound(int operationalCode, ICodec codec, Type packet)
         {
-            Inbound.Bind(operationalCode, codec);
+            Inbound.Bind(operationalCode, codec, packet);
         }
 
-        public void RegisterInboundWithHandler(int operationalCode, ICodec codec, Type packetClass, IPacketHandler<Packet> handler)
+        public void RegisterInboundWithHandler(int operationalCode, ICodec codec, Type packet, IPacketHandler<Packet> handler)
         {
-            Inbound.Bind(operationalCode, codec);
-            Handlers.Bind(packetClass, handler);
+            Inbound.Bind(operationalCode, codec, packet);
+            Handlers.Bind(packet, handler);
         }
 
-        public void RegisterOutbound(int operationalCode, ICodec codec)
+        public void RegisterOutbound(int operationalCode, ICodec codec, Type packet)
         {
-            Outbound.Bind(operationalCode, codec);
+            Outbound.Bind(operationalCode, codec, packet);
         }
 
         public IPacketHandler<Packet> GetPacketHandler(Type type)
@@ -77,12 +77,12 @@ namespace PacketLibrary.Network
 
         public void WritePacket(Packet packet, NetworkStream stream)
         {
-            PacketBuffer buffer = new PacketBuffer(1024);
+            PacketBuffer buffer = new PacketBuffer(1028);
 
-            int operationalCode = Outbound.GetOperationalCode(packet);
+            int operationalCode = Outbound.GetOperationalCode(packet.GetType());
             ICodec codec = Outbound.Get(operationalCode);
 
-            PacketBuffer data = codec.Encode(packet, new PacketBuffer(1024));
+            PacketBuffer data = codec.Encode(packet, new PacketBuffer(1020));
 
             WriteHeader(operationalCode, data.Lenght(), buffer);
             buffer.WriteBuffer(data);

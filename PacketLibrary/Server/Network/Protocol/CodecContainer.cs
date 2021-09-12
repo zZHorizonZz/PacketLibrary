@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PacketLibrary.Network
 {
@@ -6,16 +7,16 @@ namespace PacketLibrary.Network
     {
 
         private IDictionary<int, ICodec> Codec { get; }
-        private IDictionary<Packet, int> OperationalCodes { get; }
+        private IDictionary<Type, int> OperationalCodes { get; }
 
 
         public CodecContainer()
         {
             Codec = new SortedDictionary<int, ICodec>();
-            OperationalCodes = new SortedDictionary<Packet, int>();
+            OperationalCodes = new SortedDictionary<Type, int>();
         }
 
-        public void Bind(int operationCode, ICodec codec)
+        public void Bind(int operationCode, ICodec codec, Type type)
         {
             if (HasCodec(operationCode))
             {
@@ -23,11 +24,12 @@ namespace PacketLibrary.Network
             }
 
             Codec.Add(operationCode, codec);
+            OperationalCodes.Add(type, operationCode);
         }
 
         public ICodec Get(int operationCode) => Codec[operationCode];
 
-        public int GetOperationalCode(Packet packet) => OperationalCodes[packet];
+        public int GetOperationalCode(Type packet) => OperationalCodes[packet];
 
         public bool HasCodec(int operationCode) => Codec.ContainsKey(operationCode);
     }
