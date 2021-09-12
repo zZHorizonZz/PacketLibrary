@@ -19,7 +19,7 @@ namespace PacketLibrary.Network
         {
             if (index >= Buffer.Length)
             {
-                throw new InternalBufferOverflowException();
+                throw new InternalBufferOverflowException("When reading byte something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
             }
 
             return Buffer[index];
@@ -28,7 +28,7 @@ namespace PacketLibrary.Network
         {
             if (ReaderIndex >= Buffer.Length)
             {
-                throw new InternalBufferOverflowException();
+                throw new InternalBufferOverflowException("When reading byte something went wrong. Reader Index: " + ReaderIndex + " , Buffer length: " + Buffer.Length);
             }
 
             return Buffer[ReaderIndex++];
@@ -38,7 +38,7 @@ namespace PacketLibrary.Network
         {
             if (index >= Buffer.Length)
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("When writing byte something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
             }
 
             Buffer[index] = value;
@@ -47,7 +47,7 @@ namespace PacketLibrary.Network
         {
             if (WriterIndex >= Buffer.Length)
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("When reading byte something went wrong. Writer Index: " + WriterIndex + " , Buffer length: " + Buffer.Length);
             }
 
             Buffer[WriterIndex++] = value;
@@ -57,7 +57,7 @@ namespace PacketLibrary.Network
         {
             if (WriterIndex + bytes.Length > Buffer.Length)
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("When writing bytes something went wrong. Writer Index: " + WriterIndex + " , Bytes:" + bytes.Length + " , Buffer length: " + Buffer.Length);
             }
 
             for (int i = 0; i < bytes.Length; i++)
@@ -70,7 +70,7 @@ namespace PacketLibrary.Network
         {
             if (index + bytes.Length > Buffer.Length)
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("When writing bytes something went wrong. Index: " + index + " , Bytes:" + bytes.Length + " , Buffer length: " + Buffer.Length);
             }
 
             for (int i = 0; i < bytes.Length; i++)
@@ -88,7 +88,7 @@ namespace PacketLibrary.Network
         {
             if (index >= Buffer.Length)
             {
-                throw new InternalBufferOverflowException();
+                throw new InternalBufferOverflowException("When reading short something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
             }
 
             return BitConverter.ToInt16(Buffer, index);
@@ -98,7 +98,7 @@ namespace PacketLibrary.Network
         {
             if (ReaderIndex >= Buffer.Length)
             {
-                throw new InternalBufferOverflowException();
+                throw new InternalBufferOverflowException("When reading short something went wrong. Reader Index: " + ReaderIndex + " , Buffer length: " + Buffer.Length);
             }
 
             short value = BitConverter.ToInt16(Buffer, ReaderIndex);
@@ -111,7 +111,7 @@ namespace PacketLibrary.Network
         {
             if (index >= Buffer.Length)
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("When writing short something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
             }
 
             WriteBytes(index, BitConverter.GetBytes(value));
@@ -120,7 +120,7 @@ namespace PacketLibrary.Network
         {
             if (WriterIndex >= Buffer.Length)
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("When writing short something went wrong. Writer Index: " + WriterIndex + " , Buffer length: " + Buffer.Length);
             }
 
             WriteBytes(BitConverter.GetBytes(value));
@@ -130,7 +130,7 @@ namespace PacketLibrary.Network
         {
             if (index >= Buffer.Length)
             {
-                throw new InternalBufferOverflowException();
+                throw new InternalBufferOverflowException("When reading integer something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
             }
 
             return BitConverter.ToInt32(Buffer, index);
@@ -140,7 +140,7 @@ namespace PacketLibrary.Network
         {
             if (ReaderIndex >= Buffer.Length)
             {
-                throw new InternalBufferOverflowException();
+                throw new InternalBufferOverflowException("When reading integer something went wrong. Reader Index: " + ReaderIndex + " , Buffer length: " + Buffer.Length);
             }
 
             int value = BitConverter.ToInt32(Buffer, ReaderIndex);
@@ -153,7 +153,7 @@ namespace PacketLibrary.Network
         {
             if (index >= Buffer.Length)
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("When writing integer something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
             }
 
             WriteBytes(index, BitConverter.GetBytes(value));
@@ -162,7 +162,7 @@ namespace PacketLibrary.Network
         {
             if (WriterIndex >= Buffer.Length)
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("When writing integer something went wrong. Writer Index: " + WriterIndex + " , Buffer length: " + Buffer.Length);
             }
 
             WriteBytes(BitConverter.GetBytes(value));
