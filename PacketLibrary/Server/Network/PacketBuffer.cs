@@ -15,6 +15,11 @@ namespace PacketLibrary.Network
             Buffer = new byte[capacity];
         }
 
+        public PacketBuffer(byte[] buffer)
+        {
+            Buffer = buffer;
+        }
+
         public byte ReadByte(int index)
         {
             if (index >= Buffer.Length)

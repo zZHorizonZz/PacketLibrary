@@ -2,7 +2,7 @@
 
 namespace PacketLibrary.Network
 {
-    public class ServerBootstrap : Server
+    public class ServerBootstrap : AServer
     {
         public SimpleProtocol DefaultProtocol { get; }
 
@@ -18,7 +18,7 @@ namespace PacketLibrary.Network
 
         public override IConnection HandleIncomingConnection()
         {
-            TcpClient tcpClient = Listener.AcceptTcpClient();
+            TcpClient tcpClient = GetListener().AcceptTcpClient();
 
             IConnection connection = new DefaultConnection(DefaultProtocol, tcpClient);
             if (connection != null)

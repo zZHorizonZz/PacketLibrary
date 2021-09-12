@@ -54,17 +54,21 @@ namespace PacketLibrary.Network
 
         public Packet ReadPacket(NetworkStream stream)
         {
-            Tuple<int, PacketBuffer> header = ReadHeader(stream);
+            Tuple<int, int> header = ReadHeader(stream);
 
             int operationalCode = header.Item1;
-            PacketBuffer buffer = header.Item2;
+            int length = header.Item2;
 
+            byte[] data = new byte[length];
+            stream.Read(data, 0, length);
+
+            PacketBuffer buffer = new PacketBuffer(data);
             ICodec codec = Inbound.Get(operationalCode);
 
             return codec.Decode(buffer);
         }
 
-        public Tuple<int, PacketBuffer> ReadHeader(NetworkStream stream)
+        public Tuple<int, int> ReadHeader(NetworkStream stream)
         {
             byte[] header = new byte[8];
             stream.Read(header, 0, header.Length);
@@ -72,7 +76,8 @@ namespace PacketLibrary.Network
             int operationalCode = BitConverter.ToInt32(header, 0);
             int length = BitConverter.ToInt32(header, 4);
 
-            return new Tuple<int, PacketBuffer>(operationalCode, new PacketBuffer(length));
+            Console.WriteLine("OP Code: {0} , Length: {1}", operationalCode, length);
+            return new Tuple<int, int>(operationalCode, length);
         }
 
         public void WritePacket(Packet packet, NetworkStream stream)

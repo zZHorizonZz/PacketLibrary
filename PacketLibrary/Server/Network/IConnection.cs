@@ -11,5 +11,7 @@ namespace PacketLibrary.Network
         void SetProtocol(Protocol protocol);
 
         void SendPacket(Packet packet);
+
+        void Read();
     }
 }

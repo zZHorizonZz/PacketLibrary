@@ -5,22 +5,22 @@ using System.Net.Sockets;
 
 namespace PacketLibrary.Network
 {
-    public abstract class Server
+    public abstract class AServer
     {
 
         public Logger Logger { get; }
 
-        public string Address { get; set; }
-        public int Port { get; set; }
+        public string Address { get; }
+        public int Port { get; }
 
-        public TcpListener Listener { get; set; }
+        private TcpListener Listener;
         public List<IConnection> Connections { get; }
 
-        public Server(int port) : this("127.0.0.1", port)
+        public AServer(int port) : this("127.0.0.1", port)
         {
 
         }
-        public Server(string address, int port)
+        public AServer(string address, int port)
         {
             Address = address;
             Port = port;
@@ -29,9 +29,8 @@ namespace PacketLibrary.Network
             Connections = new List<IConnection>();
         }
 
-        public TcpListener Build()
+        public TcpListener Start()
         {
-
             Logger.Info("Server is starting..", null);
 
             IPAddress address = IPAddress.Parse(Address);
@@ -50,5 +49,10 @@ namespace PacketLibrary.Network
         }
 
         public abstract IConnection HandleIncomingConnection();
+
+        public TcpListener GetListener()
+        {
+            return Listener;
+        }
     }
 }
