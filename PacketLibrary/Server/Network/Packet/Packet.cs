@@ -1,7 +1,9 @@
-﻿namespace PacketLibrary.Network
+﻿using System;
+
+namespace PacketLibrary.Network
 {
     public abstract class Packet
     {
-
+        
     }
 }

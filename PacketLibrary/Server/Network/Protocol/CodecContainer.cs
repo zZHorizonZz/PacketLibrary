@@ -12,8 +12,8 @@ namespace PacketLibrary.Network
 
         public CodecContainer()
         {
-            Codec = new SortedDictionary<int, ICodec>();
-            OperationalCodes = new SortedDictionary<Type, int>();
+            Codec = new Dictionary<int, ICodec>();
+            OperationalCodes = new Dictionary<Type, int>();
         }
 
         public void Bind(int operationCode, ICodec codec, Type type)
