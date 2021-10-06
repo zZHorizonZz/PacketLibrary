@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace PacketLibrary.Network
 {
@@ -37,6 +38,39 @@ namespace PacketLibrary.Network
             }
 
             return Buffer[ReaderIndex++];
+        }
+
+        public byte[] ReadBytes()
+        {
+            byte[] bytes = new byte[Buffer.Length];
+            Buffer.CopyTo(bytes, 0);
+
+            return bytes;
+        }
+
+        public byte[] ReadBytes(int index)
+        {
+            if (index >= Buffer.Length)
+            {
+                throw new InternalBufferOverflowException("When reading bytes something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
+            }
+
+            byte[] bytes = new byte[Buffer.Length];
+            Buffer.CopyTo(bytes, index);
+
+            return bytes;
+        }
+        public byte[] ReadBytes(int index, int endIndex)
+        {
+            if (index + endIndex >= Buffer.Length)
+            {
+                throw new InternalBufferOverflowException("When reading bytes something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
+            }
+
+            byte[] bytes = new byte[Buffer.Length];
+            Array.Copy(Buffer, index, bytes, 0, endIndex);
+
+            return bytes;
         }
 
         public void WriteByte(int index, byte value)
@@ -211,6 +245,58 @@ namespace PacketLibrary.Network
             }
 
             WriteBytes(BitConverter.GetBytes(value));
+        }
+
+        public string ReadString(int index)
+        {
+            if (index >= Buffer.Length)
+            {
+                throw new InternalBufferOverflowException("When reading string something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
+            }
+
+            int stringLength = ReadInteger(index);
+
+            return Encoding.UTF8.GetString(Buffer, index, stringLength);
+        }
+
+        public string ReadString()
+        {
+            if (ReaderIndex >= Buffer.Length)
+            {
+                throw new InternalBufferOverflowException("When reading string something went wrong. Reader Index: " + ReaderIndex + " , Buffer length: " + Buffer.Length);
+            }
+
+            int stringLength = ReadInteger(ReaderIndex);
+            string str = Encoding.UTF8.GetString(Buffer, ReaderIndex, stringLength);
+            ReaderIndex += stringLength;
+
+            return str;
+        }
+
+        public void WriteString(int index, string value)
+        {
+            if (index >= Buffer.Length)
+            {
+                throw new IndexOutOfRangeException("When writing string something went wrong. Index: " + index + " , Buffer length: " + Buffer.Length);
+            }
+
+            byte[] str = Encoding.UTF8.GetBytes(value);
+
+            WriteInteger(index, str.Length);
+            WriteBytes(index + 4, str);
+        }
+
+        public void WriteString(string value)
+        {
+            if (WriterIndex >= Buffer.Length)
+            {
+                throw new IndexOutOfRangeException("When writing string something went wrong. Writer Index: " + WriterIndex + " , Buffer length: " + Buffer.Length);
+            }
+
+            byte[] str = Encoding.UTF8.GetBytes(value);
+
+            WriteInteger(str.Length);
+            WriteBytes(str);
         }
 
         public int Lenght() => Buffer.Length;
