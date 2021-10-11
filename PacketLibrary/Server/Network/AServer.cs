@@ -20,6 +20,7 @@ namespace PacketLibrary.Network
         {
 
         }
+
         public AServer(string address, int port)
         {
             Address = address;

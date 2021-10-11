@@ -267,6 +267,8 @@ namespace PacketLibrary.Network
             }
 
             int stringLength = ReadInteger(ReaderIndex);
+            ReaderIndex += 4;
+
             string str = Encoding.UTF8.GetString(Buffer, ReaderIndex, stringLength);
             ReaderIndex += stringLength;
 
