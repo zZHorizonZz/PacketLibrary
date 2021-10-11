@@ -37,6 +37,11 @@ namespace PacketLibrary.Logging
         public string GetFormatted()
         {
             StringBuilder formated = new StringBuilder("[" + Time.ToString() + "] " + "[" + LogLevel.ToString().ToUpperInvariant() + "] ");
+            if (Exception != null)
+            {
+                formated.Append(Exception.GetType().FullName).Append(" ");
+            }
+
             formated.Append(Message);
 
             if (Exception != null)
