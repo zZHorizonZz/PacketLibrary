@@ -30,6 +30,9 @@ namespace PacketLibrary.Network
             Connections = new List<IConnection>();
         }
 
+        ///<summary>
+        ///This method will start the server and logs possible error.
+        ///</summmary>
         public TcpListener Start()
         {
             Logger.Info("Server is starting..", null);
