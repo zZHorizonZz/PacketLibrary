@@ -23,6 +23,10 @@ namespace PacketLibrary.Network
             Port = port;
         }
 
+        ///<summary>
+        ///This method will create connection to the server and if connection was established
+        ///properly it will log this action otherwise there will be warning message.
+        ///</summary>
         public TcpClient Connect()
         {
             Logger.Info("Connecting to server...");
